@@ -26,20 +26,14 @@ def update_grid(rows, columns, grid):
   for row, column in cells_to_update:
     grid[row][column] = 1
 
-def has_zero_values(grid):
-  for row in grid:
-    for value in row:
-      if not value:
-        return True
-  return False
+  return len(cells_to_update)
 
 def number_of_iterations(rows, columns, grid):
   iterations = 0
   
-  while has_zero_values(grid):
+  while update_grid(rows, columns, grid):
     iterations += 1
-    update_grid(rows, columns, grid)
-  
+
   return iterations
 
 if __name__ == '__main__':

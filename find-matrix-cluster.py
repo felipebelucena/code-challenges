@@ -1,3 +1,5 @@
+from collections import deque
+
 def get_adjacents(currentPosition, maxPosition):
   row, column = currentPosition
   maxRow, maxColumn = maxPosition
@@ -15,19 +17,19 @@ def get_adjacents(currentPosition, maxPosition):
   return adj_positions
 
 def find_clusters(graph):
-  visited = {}
+  visited = set()
   clusters = 0
   
   for pos in graph.keys():
     if pos not in visited:
       clusters += 1
-      visited[pos] = True
-      queue = [pos]
+      visited.add(pos)
+      queue = deque([pos])
       while len(queue):
-        node = queue.pop(0) # dequeue
+        node = queue.popleft()
         for edge in graph[node]:
           if edge not in visited:
-            visited[edge] = True
+            visited.add(edge)
             queue.append(edge)
 
   return clusters

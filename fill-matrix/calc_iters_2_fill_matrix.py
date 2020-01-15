@@ -16,12 +16,12 @@ def get_outdated_adjacents(currentPosition, maxPosition, grid):
 
 def update_grid(rows, columns, grid):
   maxPosition = (rows - 1, columns - 1)
-  cells_to_update = []
+  cells_to_update = set()
   for row in range(rows):
     for column in range(columns):
       if grid[row][column]:
-        adjacents = get_outdated_adjacents((row, column), maxPosition, grid)
-        cells_to_update.extend(adjacents)
+        for adj in get_outdated_adjacents((row, column), maxPosition, grid):
+          cells_to_update.add(adj)
 
   for row, column in cells_to_update:
     grid[row][column] = 1
@@ -29,6 +29,7 @@ def update_grid(rows, columns, grid):
   return len(cells_to_update)
 
 def number_of_iterations(rows, columns, grid):
+  print('calculating interations for {} x {} grid'.format(rows, columns))
   iterations = 0
   
   while update_grid(rows, columns, grid):
@@ -37,42 +38,23 @@ def number_of_iterations(rows, columns, grid):
   return iterations
 
 if __name__ == '__main__':
-  # test case 1
-  assert number_of_iterations(3, 3, [
-    [1, 0, 1],
-    [0, 0, 0],
-    [0, 1, 0],
-  ]) == 1
+  from sys import stdin
 
- # test case 2
-  assert number_of_iterations(5, 5, [
-    [1, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0],
-    [0, 0, 0, 1, 0],
-    [0, 0, 0, 0, 1],
-  ]) == 4
+  test_cases = int(stdin.readline().rstrip())
+  for test in range(1, test_cases + 1):
+    rows, columns, expected = [int(x) for x in stdin.readline().rstrip().split(' ')]
+    # print(rows, columns, expected)
+    grid = []
+    for row in range(rows):
+      grid.append([int(x) for x in stdin.readline().rstrip().split(' ')])
 
-  # test case 3
-  assert number_of_iterations(5, 6, [
-    [0, 0, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0, 0],
-  ]) == 3
+    print(len(grid[0]))
 
-  # test case 4
-  assert number_of_iterations(4, 2, [
-    [1, 1],
-    [1, 1],
-    [1, 1],
-    [1, 1],
-  ]) == 0
-
-  # test case 5
-  assert number_of_iterations(3, 6, [
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-  ]) == 0
+    # print(grid)
+    actual = number_of_iterations(rows, columns, grid)
+    status = "passed" if expected == actual else "failed"
+    print("Test case #{}:\n\tExpected: {}. Got: {}. {}".format(test, expected, actual, status))
+    
+    # read empty line
+    stdin.readline()
+  
